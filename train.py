@@ -67,9 +67,9 @@ def train(model, dataloaders, criterion, optimizer, scheduler, device, writer, s
             if phase == "train":
                 scheduler.step()
 
-            epoch_loss = running_loss / dataloaders[phase].dataset
+            epoch_loss = running_loss / len(dataloaders[phase].dataset)
             writer.add_scalar(f"Loss/{phase}", epoch_loss, epoch)
-            epoch_acc = running_corrects.double() / dataloaders[phase].dataset
+            epoch_acc = running_corrects.double() / len(dataloaders[phase].dataset)
             writer.add_scalar(f"Accuracy/{phase}", epoch_acc, epoch)
 
             train_val_loss_dict.update({phase: epoch_loss})
@@ -106,8 +106,9 @@ if __name__ == "__main__":
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print(f"Running on device: {device}")
 
-    model = simple_cnn.Net()
-    dataloaders = sign_language_mnist.get_train_val_datasets()
+    torch.manual_seed(0)  # ensure reproducibility
+    model = simple_cnn.Net().to(device)
+    dataloaders = sign_language_mnist.get_train_val_loaders()
 
     # Read hyperparameters from config file
     train_config = utils.get_config(args.config)["train"]
