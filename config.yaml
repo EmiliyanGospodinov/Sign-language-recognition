@@ -2,7 +2,7 @@
 # training ----------------------------------
 train:
   train_set:
-    path: ""
+    path: "data/sign_mnist_train.csv"
     val_split: 0.2
     shuffle: True
   batch_size: 32
@@ -10,13 +10,13 @@ train:
   epochs: 25
   # criterion: "CrossEntropyLoss"
   # optimizer: "Adam"
-  learning_rate: 0.001
+  learning_rate: 0.01 # SGD
   learning_rate_gamma: 0.7
   save: True
 
 # test --------------------------------------
 test:
   test_set:
-    path: ""
+    path: "data/sign_mnist_test.csv"
   batch_size: 32
   workers: 8
