@@ -1,0 +1,22 @@
+---
+# training ----------------------------------
+train:
+  train_set:
+    path: ""
+    val_split: 0.2
+    shuffle: True
+  batch_size: 32
+  workers: 8
+  epochs: 25
+  # criterion: "CrossEntropyLoss"
+  # optimizer: "Adam"
+  learning_rate: 0.001
+  learning_rate_gamma: 0.7
+  save: True
+
+# test --------------------------------------
+test:
+  test_set:
+    path: ""
+  batch_size: 32
+  workers: 8
