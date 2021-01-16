@@ -22,9 +22,18 @@ We're using the [Sign Language MNIST](https://www.kaggle.com/datamunge/sign-lang
 pip install -r requirements.txt
 ```
 
+## Download datasets
+
+```bash
+wget http://i13pc106.ira.uka.de/~tha/PNNProjects/sign-language-mnist.zip
+mkdir data
+unzip sign-language-mnist.zip -d data/
+rm sign-language-mnist.zip
+```
+
 ## Training
 
-The implmentation of models can be found in folder `models`.
+Implmentation of models can be found in folder `models/`.
 
 Configuration (dataset path, hyperparameters, etc) is defined in `config.yaml`.
 
@@ -34,13 +43,16 @@ To start training, run
 python train.py
 ```
 
-After training, the best model will be saved.
+After training, the best model will be saved in `saved_models/`.
 
 ## Evaluation
 
 To evaluate the trained model on the test set, run
 
 ```bash
-python test.py --model <trained-model>
+python test.py -m <trained-model>
 ```
 
+## Results
+
+After training, a simple neural network (3 convolutional layers + 3 Fully Connected (FC) layer) can achieve **98.2432%** accuracy on the test set. 
