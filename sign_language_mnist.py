@@ -81,11 +81,13 @@ train_config = utils.get_config()["train"]
 TRAIN_DATASET_PATH = train_config["train_set"]["path"]
 VAL_SPLIT = train_config["train_set"]["val_split"]
 SHUFFLE = train_config["train_set"]["shuffle"]
-BATCH_SIZE = train_config["batch_size"]
-NUM_WORKERS = train_config["workers"]
+TRAIN_BATCH_SIZE = train_config["batch_size"]
+TRAIN_NUM_WORKERS = train_config["workers"]
 
 test_config = utils.get_config()["test"]
 TEST_DATASET_PATH = test_config["test_set"]["path"]
+TEST_BATCH_SIZE = test_config["batch_size"]
+TEST_NUM_WORKERS = test_config["workers"]
 
 
 def get_train_val_datasets(train_dataset_path=TRAIN_DATASET_PATH):
@@ -104,7 +106,13 @@ def get_test_dataset(test_dataset_path=TEST_DATASET_PATH):
 
 def get_train_val_loaders():
     dataloaders = {
-        x: DataLoader(get_train_val_datasets()[x], batch_size=BATCH_SIZE, shuffle=True, num_workers=NUM_WORKERS)
+        x: DataLoader(
+            get_train_val_datasets()[x], batch_size=TRAIN_BATCH_SIZE, shuffle=True, num_workers=TRAIN_NUM_WORKERS
+        )
         for x in ["train", "val"]
     }
     return dataloaders
+
+
+def get_test_loader():
+    return DataLoader(get_test_dataset(), batch_size=TEST_BATCH_SIZE, num_workers=TEST_NUM_WORKERS)
