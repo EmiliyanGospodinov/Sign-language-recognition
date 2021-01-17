@@ -22,9 +22,17 @@ def get_args_parser():
     return parser
 
 
-def train(model, dataloaders, criterion, optimizer, scheduler, device, writer, save=True, num_epochs=25):
+def train(
+    model, dataloaders, criterion, optimizer, device, writer, scheduler=None, save=True, num_epochs=25, plot=True
+):
     best_model_wts = copy.deepcopy(model.state_dict())
     best_acc = 0.0
+
+    # for plotting
+    train_val_loss = {x: list() for x in ["train", "val"]}
+    train_val_acc = {x: list() for x in ["train", "val"]}
+
+    # for TensorBoard
     train_val_loss_dict = dict()
     train_val_acc_dict = dict()
 
@@ -33,7 +41,6 @@ def train(model, dataloaders, criterion, optimizer, scheduler, device, writer, s
         print("-" * 10)
 
         for phase in ["train", "val"]:
-
             if phase == "train":
                 model.train()
             else:
@@ -64,12 +71,15 @@ def train(model, dataloaders, criterion, optimizer, scheduler, device, writer, s
                 running_loss += loss.item() * images.shape[0]
                 running_corrects += torch.sum(preds == labels.data)
 
-            if phase == "train":
+            if scheduler and phase == "train":
                 scheduler.step()
 
             epoch_loss = running_loss / len(dataloaders[phase].dataset)
+            train_val_loss[phase].append(epoch_loss)
             writer.add_scalar(f"Loss/{phase}", epoch_loss, epoch)
+
             epoch_acc = running_corrects.double() / len(dataloaders[phase].dataset)
+            train_val_acc[phase].append(epoch_acc)
             writer.add_scalar(f"Accuracy/{phase}", epoch_acc, epoch)
 
             train_val_loss_dict.update({phase: epoch_loss})
@@ -86,6 +96,9 @@ def train(model, dataloaders, criterion, optimizer, scheduler, device, writer, s
         writer.add_scalars("Loss: Train vs. Val", train_val_loss_dict, epoch)
         writer.add_scalars("Accuracy: Train vs. Val", train_val_acc_dict, epoch)
         print()
+
+    if plot:
+        utils.plot_training(train_val_loss, train_val_acc)
 
     # load best model weights
     model.load_state_dict(best_model_wts)
@@ -115,12 +128,23 @@ if __name__ == "__main__":
     EPOCHS = train_config["epochs"]
     LEARNING_RATE = train_config["learning_rate"]
     SAVE = train_config["save"]
+    MOMENTUM = train_config["momentum"]
+    LR_GAMMA = train_config["learning_rate_gamma"]
+    STEP_SIZE = train_config["learning_rate_decay_period"]
 
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.SGD(model.parameters(), lr=LEARNING_RATE, momentum=0.9)  # TODO: test different optimizers
-
-    # decay LR by a factor of 0.1 every 10 epochs
-    exp_lr_scheduler = lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.1)
+    optimizer = optim.SGD(model.parameters(), lr=LEARNING_RATE, momentum=MOMENTUM)  # TODO: test different optimizers
+    exp_lr_scheduler = lr_scheduler.StepLR(optimizer, step_size=STEP_SIZE, gamma=LR_GAMMA)
 
     with SummaryWriter("runs/sign_languange") as writer:
-        train(model, dataloaders, criterion, optimizer, exp_lr_scheduler, device, writer, save=SAVE, num_epochs=EPOCHS)
+        train(
+            model,
+            dataloaders,
+            criterion,
+            optimizer,
+            device,
+            writer,
+            scheduler=exp_lr_scheduler,
+            save=SAVE,
+            num_epochs=EPOCHS,
+        )
