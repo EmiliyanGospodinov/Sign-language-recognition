@@ -8,6 +8,8 @@ import numpy as np
 
 import utils
 
+utils.set_random_seed(42)
+
 
 class SignLanguageMNIST(Dataset):
     def __init__(self, csv_file, phase="train", val_split=0.25, shuffle=True, transform=None, label_transform=None):
@@ -47,7 +49,6 @@ class SignLanguageMNIST(Dataset):
     def _train_val_split(self, data, val_split=0.25, seed=42, shuffle=True):
         indices = np.arange(len(data))
         if shuffle:
-            np.random.seed(seed)
             np.random.shuffle(indices)
         train_indices = indices[: int((1 - val_split) * len(indices))]
         val_indices = indices[int((1 - val_split) * len(indices)) :]
