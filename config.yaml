@@ -7,11 +7,11 @@ train:
     shuffle: True
   batch_size: 32
   workers: 8
-  epochs: 25
-  # criterion: "CrossEntropyLoss"
-  # optimizer: "Adam"
+  epochs: 30
   learning_rate: 0.01 # SGD
-  learning_rate_gamma: 0.7
+  momentum: 0.9
+  learning_rate_gamma: 0.1
+  learning_rate_decay_period: 10
   save: True
 
 # test --------------------------------------
