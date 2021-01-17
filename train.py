@@ -119,7 +119,8 @@ if __name__ == "__main__":
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print(f"Running on device: {device}")
 
-    torch.manual_seed(0)  # ensure reproducibility
+    utils.set_random_seed(42)  # ensure reproducibility
+
     model = simple_cnn.Net().to(device)
     dataloaders = sign_language_mnist.get_train_val_loaders()
 
