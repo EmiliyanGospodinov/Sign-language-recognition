@@ -35,13 +35,23 @@ rm sign-language-mnist.zip
 
 Implmentation of models can be found in folder `models/`.
 
-Configuration (dataset path, hyperparameters, etc) is defined in `config.yaml`.
+Configuration (including dataset path, hyperparameters, etc) is defined in `config.yaml`.
 
-To start training, run
+To start training, 
 
-```bash
-python train.py
-```
+1. Launch Tensorboard
+
+   ```bash
+   tensorboard --logdir=runs/sign_languange
+   ```
+
+2. Create another terminal session and run
+
+   ```bash
+   python train.py
+   ```
+
+3. Open browser, navigate to [https://localhost:6006](https://localhost:6006/) to monitor training.
 
 After training, the best model will be saved in `saved_models/`.
 
@@ -55,4 +65,9 @@ python test.py -m <trained-model>
 
 ## Results
 
-After training, a simple neural network (3 convolutional layers + 3 Fully Connected (FC) layer) can achieve **98.2432%** accuracy on the test set. 
+Training a simple neural network (3 convolutional layers + 3 Fully Connected (FC) layer) using SGD with momentum for 40 epochs:
+
+![loss_acc_plot](assets/loss_acc_plot.png)
+
+After training, the model can achieve **98.2432%** accuracy on the test set. 
+
