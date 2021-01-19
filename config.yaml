@@ -1,0 +1,22 @@
+---
+# training ----------------------------------
+train:
+  train_set:
+    path: "data/sign_mnist_train.csv"
+    val_split: 0.2
+    shuffle: True
+  batch_size: 32
+  workers: 8
+  epochs: 30
+  learning_rate: 0.01 # SGD
+  momentum: 0.9
+  learning_rate_gamma: 0.1
+  learning_rate_decay_period: 10
+  save: True
+
+# test --------------------------------------
+test:
+  test_set:
+    path: "data/sign_mnist_test.csv"
+  batch_size: 32
+  workers: 8
