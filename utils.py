@@ -4,6 +4,14 @@ import matplotlib.pyplot as plt
 import torch
 import numpy as np
 
+#imports needed for plotting the activation maps
+from sign_language_mnist import get_test_dataset
+from PIL import Image
+import torchvision.transforms
+import torchvision
+import torchfunc
+
+
 plt.style.use("ggplot")
 
 
@@ -67,4 +75,53 @@ def confusion_matrix(model, y_pred, y_true, fig_size=10):
     plt.figure(figsize = (fig_size,fig_size))
     ax = sns.heatmap(confusion_matrix, cmap= "Blues", linecolor = 'black' , linewidth = 0, annot = True, fmt='', xticklabels = letters, yticklabels = letters)
     ax.set(xlabel='Classified as', ylabel='True label')
+    plt.show()
+
+
+def plot_activation_maps(model, img_dir="", layer_num=3):
+
+    cnn_model = torch.load(model) 
+
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+    # recorder saving inputs to all submodules
+    recorder = torchfunc.hooks.recorders.ForwardPre()
+
+    # register hooks for all submodules of the model
+    # only a certain of them can be specified by index or layer type 
+    recorder.modules(cnn_model)
+
+    # load the input image from the corresponding directory
+    if img_dir == "":
+        picture = get_test_dataset()[0][0]
+    else:
+        try:
+            transform = transforms.Compose([
+                transforms.Grayscale(),
+                transforms.Scale((28, 28)),
+                transforms.ToTensor(),
+            ])
+
+            image = transform(Image.open(img_dir))
+
+        except:
+            print("Wrong directory for the input image.")
+
+    # push input image through the model
+    output = cnn_model(picture.type(torch.FloatTensor).to(device).reshape(-1, 1, 28, 28))
+
+    conv = recorder.data[layer_num][0].cpu().detach().numpy()
+    size = recorder.data[layer_num][0].shape[1]
+
+    fig = plt.figure(figsize=(20, 20))
+    if size != 1:
+        rows, columns = int(size/8), 8
+    else:
+        rows, columns = 1,1
+    
+    #create subfigure for every channel in the desired layer
+    for i in range(rows*columns):
+        fig.add_subplot(columns, rows, i + 1)
+        plt.imshow(conv[0][i], cmap='gray')
+
     plt.show()
