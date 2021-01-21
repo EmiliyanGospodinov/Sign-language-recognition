@@ -16,6 +16,13 @@ We're using the [Sign Language MNIST](https://www.kaggle.com/datamunge/sign-lang
 
   ![American Sign language grayscale](./assets/amer_sign3.png)
 
+## Data augmentation
+
+Although we have a grayscale image for training we did some transformations to the images used for training.
+In order to create a model that is more robust, not overfit and generalize as well we did some transformation to the images, e.g. slightly rotation, changing the brightness and contrast values, zooming in or out a little bit. After the transformations was applied the images looked like this:
+
+  ![American Sign language grayscale transformed](./assets/data_augmentation.png)
+
 ## Install dependencies
 
 ```bash
