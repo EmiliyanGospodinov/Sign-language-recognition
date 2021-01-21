@@ -1,3 +1,9 @@
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import functools
+import operator
+
 class CNN(nn.Module):
 
     def __init__(self, input_dims=(1,28,28)):
@@ -5,7 +11,7 @@ class CNN(nn.Module):
         super().__init__()
 
         self.feature_extractor = nn.Sequential(
-            nn.Conv2d(1, 32, kernel_size = 7, padding = 1),
+            nn.Conv2d(1, 32, kernel_size = 5, padding = 1),
             nn.BatchNorm2d(32),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(2),
