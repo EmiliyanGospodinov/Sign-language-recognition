@@ -16,17 +16,28 @@ def test(model, device, test_dataloader):
     model.eval()
 
     correct = 0
+    correct_labels = 0
+    running_predicted = 0
+
     for images, labels in tqdm(test_dataloader, desc="Testing", total=len(test_dataloader)):
         images = images.to(device)
         labels = labels.to(device)
 
         with torch.no_grad():
             outputs = model(images)
-            _, preds = _, preds = torch.max(outputs, 1)
+            _, preds = torch.max(outputs, 1)
             correct += (preds == labels).sum().item()
+            correct_labels += labels.sum().item()
+            running_predicted += preds.sum().item()
 
+
+    precision = correct / running_predicted
+    recall = correct / correct_labels
+    f1_score = (2 * precision * recall) / (precision + recall)
     print(f"Accuracy on test set is {correct / len(test_dataloader.dataset) * 100:.4f}%")
-
+    print(f"Precision on test set is { precision * 100:.4f}%")
+    print(f"Recall on test set is { recall * 100:.4f}%")
+    print(f"F1-score on test set is {f1_score * 100:.4f}%")
 
 if __name__ == "__main__":
     arg_parser = get_args_parser()
