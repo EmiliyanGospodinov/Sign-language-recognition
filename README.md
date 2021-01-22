@@ -31,6 +31,22 @@ unzip sign-language-mnist.zip -d data/
 rm sign-language-mnist.zip
 ```
 
+## Data augmentation
+
+Data augmentation is applied before training. For example:
+
+Original images
+
+![original](./assets/original.png)
+
+Random horizontal flip:
+
+![random horizontal flip](./assets/random_horizontal_flip.png)
+
+Random affine:
+
+![random affine](./assets/random_affine.png)
+
 ## Training
 
 Implmentation of models can be found in folder `models/`.
