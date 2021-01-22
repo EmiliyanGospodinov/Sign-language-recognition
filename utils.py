@@ -70,7 +70,7 @@ def plot_training(train_val_loss, train_val_acc, save=True):
         save_fig("loss_acc_plot", "images", fig_extension="png")
 
 
-def save_fig(fig, fig_name, fig_dir, tight_layout=True, fig_extension="png", resolution=300):
+def save_fig(fig, fig_name, fig_dir, tight_layout=True, padding=False, fig_extension="png", resolution=300):
     """
     Save figure
 
@@ -84,6 +84,8 @@ def save_fig(fig, fig_name, fig_dir, tight_layout=True, fig_extension="png", res
         Directory to save figure
     tight_layout : bool, optional
         Automatically adjusts subplot params so that the subplot(s) fits in to the figure area, by default True
+    padding: bool, optional
+        Paddings around figure, by default False
     fig_extension : str, optional
         Extension of figure, by default "png"
     resolution : int, optional
@@ -97,5 +99,8 @@ def save_fig(fig, fig_name, fig_dir, tight_layout=True, fig_extension="png", res
     if tight_layout:
         plt.tight_layout()
 
-    fig.savefig(path, format=fig_extension, dpi=resolution)
+    if not padding:
+        fig.savefig(path, format=fig_extension, dpi=resolution, bbox_inches="tight", pad_inches=0)
+    else:
+        fig.savefig(path, format=fig_extension, dpi=resolution)
     print(f"Save {fig_name}.{fig_extension} in {fig_dir}")
