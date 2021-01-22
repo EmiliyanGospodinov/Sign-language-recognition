@@ -25,6 +25,37 @@ def get_args_parser():
 def train(
     model, dataloaders, criterion, optimizer, device, writer, scheduler=None, save=True, num_epochs=25, plot=True
 ):
+    """
+    Training process
+
+    Parameters
+    ----------
+    model : nn.Module
+        Model to be trained
+    dataloaders : dict[str, torch.utils.data.DataLoader]
+        Dictionary containing training and validation dataloaders
+    criterion :
+        Loss function
+    optimizer : torch.optim.Optimizer
+        Optimization algorithms
+    device : torch.device
+        Device for training
+    writer : torch.utils.tensorboard.SummaryWriter
+        SummaryWriter which writes data to tensorboard
+    scheduler : torch.optim.lr_scheduler, optional
+        Learning rate scheduler, by default None
+    save : bool, optional
+        Save the best trained model, by default True
+    num_epochs : int, optional
+        Number of training epochs, by default 25
+    plot : bool, optional
+        Plotting training loss and accuracy, by default True
+
+    Returns
+    -------
+    nn.Module
+        The best trained model
+    """
     best_model_wts = copy.deepcopy(model.state_dict())
     best_acc = 0.0
 
@@ -134,7 +165,7 @@ if __name__ == "__main__":
     STEP_SIZE = train_config["learning_rate_decay_period"]
 
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.SGD(model.parameters(), lr=LEARNING_RATE, momentum=MOMENTUM)  # TODO: test different optimizers
+    optimizer = optim.SGD(model.parameters(), lr=LEARNING_RATE, momentum=MOMENTUM)
     exp_lr_scheduler = lr_scheduler.StepLR(optimizer, step_size=STEP_SIZE, gamma=LR_GAMMA)
 
     with SummaryWriter("runs/sign_languange") as writer:
