@@ -12,6 +12,15 @@ utils.set_random_seed(42)
 
 
 class SignLanguageMNIST(Dataset):
+    """
+    Custom dataset class of Sign Language MNIST (https://www.kaggle.com/datamunge/sign-language-mnist?select=american_sign_language.PNG)
+
+    Parameters
+    ----------
+    Dataset : torch.utils.data.Dataset
+        An abstract class representing a Dataset.
+    """
+
     def __init__(self, csv_file, phase="train", val_split=0.25, shuffle=True, transform=None, label_transform=None):
         phases = ["train", "val", "test"]
         assert phase in phases, f"Choose phase from {phases}"
@@ -47,6 +56,25 @@ class SignLanguageMNIST(Dataset):
         return len(self.labels)
 
     def _train_val_split(self, data, val_split=0.25, seed=42, shuffle=True):
+        """
+        Split data into training set and validation set
+
+        Parameters
+        ----------
+        data : array_like
+            Data to be splitted
+        val_split : float, optional
+            Proportion of data to include in validation set, by default 0.25
+        seed : int, optional
+            Random seed, by default 42
+        shuffle : bool, optional
+            Whether or not to shuffle the data before splitting, by default True
+
+        Returns
+        -------
+        (list[int], list[int])
+            tuple including training set indices list and validation set indices list
+        """
         indices = np.arange(len(data))
         if shuffle:
             np.random.shuffle(indices)
@@ -92,6 +120,19 @@ TEST_NUM_WORKERS = test_config["workers"]
 
 
 def get_train_val_datasets(train_dataset_path=TRAIN_DATASET_PATH):
+    """
+    Get training and validation set dataset
+
+    Parameters
+    ----------
+    train_dataset_path : str, optional
+        Path of dataset, by default TRAIN_DATASET_PATH
+
+    Returns
+    -------
+    dict[str, SignLanguageMNIST]
+        Dictionary containing training set and validation set
+    """
     sign_language_datasets = {
         x: SignLanguageMNIST(
             train_dataset_path, phase=x, val_split=VAL_SPLIT, shuffle=SHUFFLE, transform=data_transforms[x]
@@ -102,10 +143,31 @@ def get_train_val_datasets(train_dataset_path=TRAIN_DATASET_PATH):
 
 
 def get_test_dataset(test_dataset_path=TEST_DATASET_PATH):
+    """
+    Get test datasets
+
+    Parameters
+    ----------
+    test_dataset_path : str, optional
+        Path of test set, by default TEST_DATASET_PATH
+
+    Returns
+    -------
+    SignLanguageMNIST
+        Test set
+    """
     return SignLanguageMNIST(test_dataset_path, phase="test", transform=data_transforms["test"])
 
 
 def get_train_val_loaders():
+    """
+    Get training and validation dataloaders
+
+    Returns
+    -------
+    dict[str, torch.utils.data.DataLoader]
+        Dictionary containing training and validation dataloaders
+    """
     dataloaders = {
         x: DataLoader(
             get_train_val_datasets()[x], batch_size=TRAIN_BATCH_SIZE, shuffle=True, num_workers=TRAIN_NUM_WORKERS
@@ -116,4 +178,12 @@ def get_train_val_loaders():
 
 
 def get_test_loader():
+    """
+    Get test dataloader
+
+    Returns
+    -------
+    torch.utils.data.DataLoader
+        Test dataloader
+    """
     return DataLoader(get_test_dataset(), batch_size=TEST_BATCH_SIZE, num_workers=TEST_NUM_WORKERS)
