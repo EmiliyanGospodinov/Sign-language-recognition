@@ -37,15 +37,15 @@ Data augmentation is applied before training. For example:
 
 Original images
 
-<img src="./assets/original.png" alt="original" style="zoom: 25%;" />
+![original](./assets/original.png)
 
 Random horizontal flip:
 
-<img src="./assets/random_horizontal_flip.png" alt="random horizontal flip" style="zoom:25%;" />
+![random horizontal flip](./assets/random_horizontal_flip.png)
 
 Random affine:
 
-<img src="./assets/random_affine.png" alt="random affine" style="zoom:25%;" />
+![random affine](./assets/random_affine.png)
 
 ## Training
 
