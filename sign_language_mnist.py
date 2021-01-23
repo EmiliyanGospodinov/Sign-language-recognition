@@ -62,6 +62,7 @@ data_transforms = {
             transforms.ToPILImage(),
             # data augmentation
             transforms.RandomRotation(10),
+            transforms.RandomHorizontalFlip(p=0.5),
             transforms.ColorJitter(brightness=(0.5,1.5), contrast=(0.5,1.5), saturation=(0.5,1.5), hue=(-0.5,0.5)),
             transforms.RandomResizedCrop(28, scale=(1.0, 1.5)),
             transforms.ToTensor(),
