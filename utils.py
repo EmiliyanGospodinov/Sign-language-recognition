@@ -70,7 +70,9 @@ def plot_training(train_val_loss, train_val_acc, save=True):
         save_fig("loss_acc_plot", "images", fig_extension="png")
 
 
-def save_fig(fig, fig_name, fig_dir, tight_layout=True, padding=False, fig_extension="png", resolution=300):
+def save_fig(
+    fig, fig_name, fig_dir, tight_layout=True, padding=False, fig_extension="png", resolution=300, transparent=True
+):
     """
     Save figure
 
@@ -100,7 +102,9 @@ def save_fig(fig, fig_name, fig_dir, tight_layout=True, padding=False, fig_exten
         plt.tight_layout()
 
     if not padding:
-        fig.savefig(path, format=fig_extension, dpi=resolution, bbox_inches="tight", pad_inches=0)
+        fig.savefig(
+            path, format=fig_extension, dpi=resolution, bbox_inches="tight", pad_inches=0, transparent=transparent
+        )
     else:
-        fig.savefig(path, format=fig_extension, dpi=resolution)
+        fig.savefig(path, format=fig_extension, dpi=resolution, transparent=transparent)
     print(f"Save {fig_name}.{fig_extension} in {fig_dir}")
