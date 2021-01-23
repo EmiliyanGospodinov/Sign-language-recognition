@@ -74,7 +74,7 @@ python test.py -m <trained-model>
 
 To infer with an already trained model on some desired input image, run 
 ```bash
-python infer.py -m <directory-trained-model> <directory-of-image>
+python infer.py <directory-trained-model> <directory-of-image>
 ```
 
 
