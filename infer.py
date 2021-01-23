@@ -3,7 +3,7 @@ import torch
 from torchvision import transforms
 from PIL import Image
 import argparse
-
+import numpy as np
 
 map_characters = np.array(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y'])
 
@@ -15,6 +15,22 @@ def get_args_parser():
 
 
 def infer(model, img_dir):
+        """
+        Load an already trained model and infer an input image with it
+
+        Parameters
+        ----------
+        model : directory
+            Path where the model is stored
+        img_dir : directory
+            Path where the input image is stored
+
+        Returns
+        -------
+        str:
+           a character that corresponds to the image аccording to the model
+            
+        """
 
     model.eval()
 
