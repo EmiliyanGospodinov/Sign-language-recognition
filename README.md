@@ -33,19 +33,20 @@ rm sign-language-mnist.zip
 
 ## Data augmentation
 
-Data augmentation is applied before training. For example:
+Before training, combination of transformation as well as data augmentation are applied, including:
 
-Original images
+- random rotation
+- random horizontal flip
+- randomly changing the brightness, contrast and saturation
+- random resized cropping
+
+Original images:
 
 ![original](./assets/original.png)
 
-Random horizontal flip:
+Data augmentation:
 
-![random horizontal flip](./assets/random_horizontal_flip.png)
-
-Random affine:
-
-![random affine](./assets/random_affine.png)
+![transform_combination](./assets/transform_combination.png)
 
 ## Training
 
