@@ -71,8 +71,6 @@ def train(
                 # statistics
                 running_loss += loss.item() * images.shape[0]
                 running_corrects += torch.sum(preds == labels.data)
-                running_true_corrects += torch.sum(labels.data)
-                running_predicted += torch.sum(preds)
 
             if scheduler and phase == "train":
                 scheduler.step()
@@ -82,15 +80,9 @@ def train(
             writer.add_scalar(f"Loss/{phase}", epoch_loss, epoch)
 
             epoch_acc = running_corrects.double() / len(dataloaders[phase].dataset)
-            epoch_rec = running_corrects / running_true_corrects
-            epoch_prec = running_corrects / running_predicted
-            epoch_f1 = (2 * epoch_prec * epoch_rec) / (epoch_prec + epoch_rec) 
 
             train_val_acc[phase].append(epoch_acc)
             writer.add_scalar(f"Accuracy/{phase}", epoch_acc, epoch)
-            writer.add_scalar(f"Recall/{phase}", epoch_rec, epoch)
-            writer.add_scalar(f"Precision/{phase}", epoch_prec, epoch)
-            writer.add_scalar(f"F1-score/{phase}", epoch_f1, epoch)
 
             train_val_loss_dict.update({phase: epoch_loss})
             train_val_acc_dict.update({phase: epoch_acc})
@@ -144,7 +136,7 @@ if __name__ == "__main__":
     STEP_SIZE = train_config["learning_rate_decay_period"]
 
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.SGD(model.parameters(), lr=LEARNING_RATE, momentum=MOMENTUM)  # TODO: test different optimizers
+    optimizer = optim.SGD(model.parameters(), lr=LEARNING_RATE, momentum=MOMENTUM)
     exp_lr_scheduler = lr_scheduler.StepLR(optimizer, step_size=STEP_SIZE, gamma=LR_GAMMA)
 
     with SummaryWriter("runs/sign_language") as writer:
