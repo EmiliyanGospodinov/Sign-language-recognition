@@ -15,22 +15,22 @@ def get_args_parser():
 
 
 def infer(model, img_dir):
-        """
-        Load an already trained model and infer an input image with it
+    """
+    Load an already trained model and infer an input image with it
 
-        Parameters
-        ----------
-        model : str
-            Path where the model is stored
-        img_dir : str
-            Path where the input image is stored
+    Parameters
+    ----------
+    model : str
+        Path where the model is stored
+    img_dir : str
+        Path where the input image is stored
 
-        Returns
-        -------
-        str:
-           a character that corresponds to the image аccording to the model
-            
-        """
+    Returns
+    -------
+    str:
+        a character that corresponds to the image аccording to the model
+        
+    """
 
     model.eval()
 
