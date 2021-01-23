@@ -31,13 +31,7 @@ def test(model, device, test_dataloader):
             running_predicted += preds.sum().item()
 
 
-    precision = correct / running_predicted
-    recall = correct / correct_labels
-    f1_score = (2 * precision * recall) / (precision + recall)
     print(f"Accuracy on test set is {correct / len(test_dataloader.dataset) * 100:.4f}%")
-    print(f"Precision on test set is { precision * 100:.4f}%")
-    print(f"Recall on test set is { recall * 100:.4f}%")
-    print(f"F1-score on test set is {f1_score * 100:.4f}%")
 
 if __name__ == "__main__":
     arg_parser = get_args_parser()
