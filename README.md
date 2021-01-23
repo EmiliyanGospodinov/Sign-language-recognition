@@ -78,4 +78,4 @@ Training with a simple neural network (3 convolutional layers + 3 Fully Connecte
 
 After training, the model can achieve **98.2432%** accuracy on the test set. 
 
-Our best model is stored in /trained_models/CNN_best.pt, it achieve same accuracy but also generalize best not only on our dataset but also on https://www.kaggle.com/grassknoted/asl-alphabet as well as https://www.kaggle.com/ayuraj/asl-dataset
+Our best model is stored under models/trained_models/CNN_best.pt, it achieve same accuracy but also generalize best not only on our dataset but also on https://www.kaggle.com/grassknoted/asl-alphabet as well as https://www.kaggle.com/ayuraj/asl-dataset
