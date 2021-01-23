@@ -5,7 +5,7 @@ import torch
 import numpy as np
 
 #imports needed for plotting the activation maps
-from sign_language_mnist import get_test_dataset
+import sign_language_mnist
 from PIL import Image
 import torchvision.transforms
 import torchvision
@@ -56,8 +56,19 @@ def save_fig(fig_name, fig_dir, tight_layout=True, fig_extension="png", resoluti
     plt.savefig(path, format=fig_extension, dpi=resolution)
 
 
-def confusion_matrix(model, y_pred, y_true, fig_size=10):
-
+def confusion_matrix(y_pred, y_true, fig_size=10):
+    """
+    Creates a confusion matrix of a model to further analyse and visualize
+    where the model has problems recognizing the right characters
+    Parameters
+    ----------
+    y_pred : torch.Tensor
+        Tensor with the predictions made by the model
+    y_true : torch.Tensor
+        Tensor with the groud truth labels
+    fig_size: int, optional
+        Size of the matplotlib figure
+    """
     stacked = torch.stack((y_true, y_pred), dim=1)
     confusion_matrix = torch.zeros(25, 25, dtype=torch.int64)
 
@@ -67,7 +78,7 @@ def confusion_matrix(model, y_pred, y_true, fig_size=10):
 
     letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y']
 
-    #delete the row coresponding to the j'th letter since it is out of the dataset because it involves motion
+    #delete the row and column coresponding to the j'th letter since it is out of the dataset because it involves motion
     confusion_matrix = np.delete(confusion_matrix, 9, axis=0)
     confusion_matrix = np.delete(confusion_matrix, 9, axis=1)
 
@@ -79,7 +90,18 @@ def confusion_matrix(model, y_pred, y_true, fig_size=10):
 
 
 def plot_activation_maps(model, img_dir="", layer_num=3):
-
+    """
+    Visualize the neural network activation maps with the usage of torchfunc library and hooks
+    Parameters
+    ----------
+    model : CNN model
+        CNN model whoes activation maps will be recorded and visualized
+    img_dir : str
+        Path to the input image 
+    layer_num: int, optional
+        Number of layer whoes maps will be visualized,
+        start at 3, previous visualize the image it self
+    """
     cnn_model = torch.load(model) 
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -93,7 +115,7 @@ def plot_activation_maps(model, img_dir="", layer_num=3):
 
     # load the input image from the corresponding directory
     if img_dir == "":
-        picture = get_test_dataset()[0][0]
+        picture = sign_language_mnist.get_test_dataset()[0][0]
     else:
         try:
             transform = transforms.Compose([
@@ -125,3 +147,117 @@ def plot_activation_maps(model, img_dir="", layer_num=3):
         plt.imshow(conv[0][i], cmap='gray')
 
     plt.show()
+
+
+def plot_cnn_kernel(model, layer_num):
+    """
+    Visualize the neural network kernel weights
+    IMPORTANT: this function will work only if it is used on layer which has weights/parameters ! 
+    Parameters
+    ----------
+    model : CNN model
+        CNN model whoes activation maps will be recorded and visualized
+    layer_num: int
+        Number of convolutional layer whoes weights will be visualized,
+    """
+    #extract the model features at the particular layer number
+    layer = model.feature_extractor[layer_num]
+    #getting the weight tensor data
+    weight_tensor = model.feature_extractor[layer_num].weight.data
+
+    nplots = weight_tensor.shape[0]*weight_tensor.shape[1]
+    ncols = 12
+    nrows = 1 + nplots//ncols
+
+    npimg = np.array(weight_tensor.cpu().numpy(), np.float32)
+    count = 0
+    fig = plt.figure(figsize=(ncols, nrows))
+
+    #looping through all the kernels in each channel
+    for i in range(weight_tensor.shape[0]):
+        for j in range(weight_tensor.shape[1]):
+            count += 1
+            ax1 = fig.add_subplot(nrows, ncols, count)
+            npimg = np.array(weight_tensor[i, j].cpu().numpy(), np.float32)
+            npimg = (npimg - np.mean(npimg)) / np.std(npimg)
+            npimg = np.minimum(1, np.maximum(0, (npimg + 0.5)))
+            ax1.imshow(npimg)
+            ax1.set_title(str(i) + ',' + str(j))
+            ax1.axis('off')
+            ax1.set_xticklabels([])
+            ax1.set_yticklabels([])
+    plt.tight_layout()
+    plt.show()
+
+
+def precision(y_pred, y_true, epsilon=1e-7):
+    """
+    calculate precision as evaluation metric
+    Parameters
+    ----------
+    y_pred : torch.Tensor
+        Tensor with the predictions made by the model
+    y_true : torch.Tensor
+        Tensor with the groud truth labels
+    epsilon: float
+        float value for numerical stability
+    Returns
+    -------
+    precision: float
+        the calculate precision value
+    """
+    if y_pred.ndim == 2:
+        y_pred = y_pred.argmax(dim=1)  
+    
+    tp = (y_true * y_pred).sum().to(torch.float32)
+    fp = ((1 - y_true) * y_pred).sum().to(torch.float32)
+
+    return tp / (tp + fp + epsilon)
+
+def recall(y_pred, y_true, epsilon=1e-7):
+    """
+    calculate recall as evaluation metric
+    Parameters
+    ----------
+    y_pred : torch.Tensor
+        Tensor with the predictions made by the model
+    y_true : torch.Tensor
+        Tensor with the groud truth labels
+    epsilon: float
+        float value for numerical stability
+    Returns
+    -------
+    recall: float
+        the calculate recall value
+    """
+    if y_pred.ndim == 2:
+        y_pred = y_pred.argmax(dim=1)
+
+    tp = (y_true * y_pred).sum().to(torch.float32)
+    fn = (y_true * (1 - y_pred)).sum().to(torch.float32)
+
+    return tp / (tp + fn + epsilon)
+
+
+def f1_score(y_pred, y_true, epsilon=1e-7):
+    """
+    calculate f1-score as evaluation metric
+    Parameters
+    ----------
+    y_pred : torch.Tensor
+        Tensor with the predictions made by the model
+    y_true : torch.Tensor
+        Tensor with the groud truth labels
+    epsilon: float
+        float value for numerical stability
+    Returns
+    -------
+    f1_score: float
+        the calculate f1_score value
+    """  
+    precision = precision(y_pred, y_true, epsilon)
+    recall = recall(y_pred, y_true, epsilon)
+
+    f1 = 2* (precision*recall) / (precision + recall + epsilon)
+    
+    return f1
