@@ -5,30 +5,31 @@ import functools
 import operator
 
 class CNN(nn.Module):
+    """
+    Convolutional neural network that was found to generalize best
+    not only on our dataset, but also on 
+    "https://www.kaggle.com/grassknoted/asl-alphabet" and "https://www.kaggle.com/ayuraj/asl-dataset"
 
+    Returns
+    -------
+    CNN: convolutional neural network    
+    """
     def __init__(self, input_dims=(1,28,28)):
 
         super().__init__()
 
         self.feature_extractor = nn.Sequential(
-            nn.Conv2d(1, 32, kernel_size = 5, padding = 1),
+            nn.Conv2d(1, 32, kernel_size = 3, padding=1),
             nn.BatchNorm2d(32),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(2),
-            nn.Dropout(0.25),
-            nn.Conv2d(32, 64, kernel_size = 5, padding = 1),
+            nn.Conv2d(32, 64, kernel_size = 3, padding=1),
             nn.BatchNorm2d(64),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(2),
-            nn.Dropout(0.25),
-            nn.Conv2d(64, 64, kernel_size = 3, padding = 1),
-            nn.BatchNorm2d(64),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d(2),
-            nn.Dropout(0.25),
         )
 
-        "a trick to find out automatically the number of flattened features in the first fully connected layer"
+        "a trick to find out automatically the number of flattened features for the first fully connected layer"
         num_features_before_fcnn = functools.reduce(operator.mul, list(self.feature_extractor(torch.rand(1, *(input_dims))).shape))
 
         self.classifier = nn.Sequential(
