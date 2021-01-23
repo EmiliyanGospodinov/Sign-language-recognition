@@ -70,6 +70,14 @@ To evaluate the trained model on the test set, run
 python test.py -m <trained-model>
 ```
 
+## Inference 
+
+To infer with an already trained model on some desired input image, run 
+```bash
+python infer.py -m <directory-trained-model> <directory-of-image>
+```
+
+
 ## Results
 
 Training with a simple neural network (3 convolutional layers + 3 Fully Connected (FC) layer) using SGD with momentum for 40 epochs:
