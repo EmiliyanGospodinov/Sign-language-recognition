@@ -20,9 +20,9 @@ def infer(model, img_dir):
 
         Parameters
         ----------
-        model : directory
+        model : str
             Path where the model is stored
-        img_dir : directory
+        img_dir : str
             Path where the input image is stored
 
         Returns
