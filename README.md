@@ -72,9 +72,10 @@ python test.py -m <trained-model>
 
 ## Results
 
-Training a simple neural network (3 convolutional layers + 3 Fully Connected (FC) layer) using SGD with momentum for 40 epochs:
+Training with a simple neural network (3 convolutional layers + 3 Fully Connected (FC) layer) using SGD with momentum for 40 epochs:
 
 ![loss_acc_plot](assets/loss_acc_plot.png)
 
 After training, the model can achieve **98.2432%** accuracy on the test set. 
 
+Our best model is stored in /trained_models/CNN_best.pt and it generalize best not only on our dataset but also on https://www.kaggle.com/grassknoted/asl-alphabet as well as https://www.kaggle.com/ayuraj/asl-dataset
