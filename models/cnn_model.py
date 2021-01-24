@@ -19,12 +19,16 @@ class CNN(nn.Module):
         super().__init__()
 
         self.feature_extractor = nn.Sequential(
-            nn.Conv2d(1, 32, kernel_size = 3, padding=1),
+            nn.Conv2d(1, 16, kernel_size = 3, padding=1),
+            nn.BatchNorm2d(16),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(2),
+            nn.Conv2d(16, 32, kernel_size = 3, padding=1),
             nn.BatchNorm2d(32),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(2),
-            nn.Conv2d(32, 64, kernel_size = 3, padding=1),
-            nn.BatchNorm2d(64),
+            nn.Conv2d(32, 32, kernel_size = 3, padding=1),
+            nn.BatchNorm2d(32),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(2),
         )
@@ -34,9 +38,6 @@ class CNN(nn.Module):
 
         self.classifier = nn.Sequential(
             nn.Linear(num_features_before_fcnn, 128),
-            nn.ReLU(inplace=True),
-            nn.Dropout(0.5),
-            nn.Linear(128, 128),
             nn.ReLU(inplace=True),
             nn.Dropout(0.5),
             nn.Linear(128, 25),
