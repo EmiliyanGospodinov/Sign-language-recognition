@@ -70,6 +70,14 @@ To evaluate the trained model on the test set, run
 python test.py -m <trained-model>
 ```
 
+## Inference 
+
+To infer with an already trained model on some desired input image, run 
+```bash
+python infer.py <directory-trained-model> <directory-of-image>
+```
+
+
 ## Results
 
 Training with a simple neural network (3 convolutional layers + 3 Fully Connected (FC) layer) using SGD with momentum for 40 epochs:
@@ -78,4 +86,4 @@ Training with a simple neural network (3 convolutional layers + 3 Fully Connecte
 
 After training, the model can achieve **98.2432%** accuracy on the test set. 
 
-Our best model is stored in /trained_models/CNN_best.pt, it achieve same accuracy but also generalize best not only on our dataset but also on https://www.kaggle.com/grassknoted/asl-alphabet as well as https://www.kaggle.com/ayuraj/asl-dataset
+Our best model is stored under models/trained_models/CNN_best.pt, it achieve same accuracy but also generalize best not only on our dataset but also on https://www.kaggle.com/grassknoted/asl-alphabet as well as https://www.kaggle.com/ayuraj/asl-dataset
