@@ -31,6 +31,23 @@ unzip sign-language-mnist.zip -d data/
 rm sign-language-mnist.zip
 ```
 
+## Data augmentation
+
+Before training, combination of transformation as well as data augmentation are applied, including:
+
+- random rotation
+- random horizontal flip
+- randomly changing the brightness, contrast and saturation
+- random resized cropping
+
+Original images:
+
+![original](./assets/original.png)
+
+Data augmentation:
+
+![transform_combination](./assets/transform_combination.png)
+
 ## Training
 
 Implmentation of models can be found in folder `models/`.
