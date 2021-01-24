@@ -7,6 +7,7 @@ def initialize_model():
     """
     Initialize a Resnet model from pytorch,
     not pretrained and adjusted to work on our dataset
+    this model will be basically use for comparison in the final report
 
     Returns
     -------
