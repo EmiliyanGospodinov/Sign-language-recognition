@@ -16,13 +16,6 @@ We're using the [Sign Language MNIST](https://www.kaggle.com/datamunge/sign-lang
 
   ![American Sign language grayscale](./assets/amer_sign3.png)
 
-## Data augmentation
-
-Although we have a grayscale image for training we did some transformations to the images used for training.
-In order to create a model that is more robust, not overfit and generalize as well we did some transformation to the images, e.g. slightly rotation, changing the brightness and contrast values, zooming in or out a little bit. After the transformations was applied the images looked like this:
-
-  ![American Sign language grayscale transformed](./assets/data_augmentation.png)
-
 ## Install dependencies
 
 ```bash
@@ -86,4 +79,4 @@ Training with a simple neural network (3 convolutional layers + 3 Fully Connecte
 
 After training, the model can achieve **98.2432%** accuracy on the test set. 
 
-Our best model is stored under models/trained_models/CNN_best.pt, it achieve same accuracy but also generalize best not only on our dataset but also on https://www.kaggle.com/grassknoted/asl-alphabet as well as https://www.kaggle.com/ayuraj/asl-dataset
+Our best model is stored under models/CNN_best.pt, it achieve same accuracy but also generalize best not only on our dataset but also on https://www.kaggle.com/grassknoted/asl-alphabet as well as https://www.kaggle.com/ayuraj/asl-dataset
