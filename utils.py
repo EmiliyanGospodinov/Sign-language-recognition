@@ -7,9 +7,10 @@ import numpy as np
 # imports needed for plotting the activation maps
 import sign_language_mnist
 from PIL import Image
-import torchvision.transforms
+from torchvision import transforms
 import torchvision
 import torchfunc
+import seaborn as sns
 
 
 plt.style.use("ggplot")
