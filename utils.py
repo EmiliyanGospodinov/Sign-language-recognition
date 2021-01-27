@@ -75,7 +75,7 @@ def plot_training(train_val_loss, train_val_acc, save=True):
     ax_acc.legend()
 
     if save:
-        save_fig("loss_acc_plot", "images", fig_extension="png")
+        save_fig(fig, "loss_acc_plot", "images", fig_extension="png")
 
 
 def save_fig(
