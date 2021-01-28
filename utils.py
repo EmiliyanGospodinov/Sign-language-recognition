@@ -259,9 +259,9 @@ def f1_score(y_pred, y_true, epsilon=1e-7):
     f1_score: float
         the calculate f1_score value
     """  
-    precision = precision(y_pred, y_true, epsilon)
-    recall = recall(y_pred, y_true, epsilon)
+    _precision = precision(y_pred, y_true, epsilon)
+    _recall = recall(y_pred, y_true, epsilon)
 
-    f1 = 2* (precision*recall) / (precision + recall + epsilon)
+    f1 = 2* (_precision*_recall) / (_precision + _recall + epsilon)
     
     return f1
