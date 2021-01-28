@@ -5,12 +5,12 @@ import torch
 import numpy as np
 
 #imports needed for plotting the activation maps
-import sign_language_mnist
+#import sign_language_mnist
 from PIL import Image
-import torchvision.transforms
+from torchvision import transforms
 import torchvision
 import torchfunc
-
+import pandas as pd
 
 plt.style.use("ggplot")
 
@@ -114,8 +114,12 @@ def plot_activation_maps(model, img_dir="", layer_num=3):
     recorder.modules(cnn_model)
 
     # load the input image from the corresponding directory
+    # by default an image from the sign language data set will be used
     if img_dir == "":
-        picture = sign_language_mnist.get_test_dataset()[0][0]
+        img_dir = get_config()["test"]["test_set"]["path"]
+        transform = transforms.Compose([transforms.ToTensor()])
+        image = transform(pd.read_csv(img_dir).to_numpy(np.uint8)[:1, 1:])
+
     else:
         try:
             transform = transforms.Compose([
@@ -130,7 +134,7 @@ def plot_activation_maps(model, img_dir="", layer_num=3):
             print("Wrong directory for the input image.")
 
     # push input image through the model
-    output = cnn_model(picture.type(torch.FloatTensor).to(device).reshape(-1, 1, 28, 28))
+    output = cnn_model(image.type(torch.FloatTensor).to(device).reshape(-1, 1, 28, 28))
 
     conv = recorder.data[layer_num][0].cpu().detach().numpy()
     size = recorder.data[layer_num][0].shape[1]
