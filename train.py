@@ -10,14 +10,24 @@ import os
 
 import sign_language_mnist
 import utils
-from models import cnn_model
+from models import cnn_model, simple_cnn, alexnet, resnet, squeezenet
 
 SAVE_MODEL_DIR = "saved_models"
+
+MODELS = {
+    "cnn_model": cnn_model.CNN(),
+    "simple_cnn": simple_cnn.Net(),
+    "resnet": resnet.initialize_model(),
+    "squeezenet": squeezenet.initialize_model(),
+}
 
 
 def get_args_parser():
     parser = argparse.ArgumentParser(description="Model training")
     parser.add_argument("--config", type=str, default="config.yaml", help="Config file path")
+    parser.add_argument(
+        "-m", "--model", type=str, default="cnn_model", choices=MODELS.keys(), help="Model to be trained"
+    )
     return parser
 
 
@@ -55,6 +65,8 @@ def train(
     nn.Module
         The best trained model
     """
+    print(f"Start training {model.__class__.__name__}")
+
     best_model_wts = copy.deepcopy(model.state_dict())
     best_acc = 0.0
 
@@ -154,7 +166,7 @@ if __name__ == "__main__":
 
     utils.set_random_seed(42)  # ensure reproducibility
 
-    model = cnn_model.CNN().to(device)
+    model = MODELS[args.model].to(device)
     dataloaders = sign_language_mnist.get_train_val_loaders()
 
     # Read hyperparameters from config file
