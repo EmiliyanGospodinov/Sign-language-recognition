@@ -10,7 +10,7 @@ import os
 
 import sign_language_mnist
 import utils
-from models import cnn_model, simple_cnn, alexnet, resnet, squeezenet
+from models import cnn_model, simple_cnn, resnet, squeezenet
 
 SAVE_MODEL_DIR = "saved_models"
 
