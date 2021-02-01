@@ -65,7 +65,13 @@ To start training,
 2. Create another terminal session and run
 
    ```bash
-   python train.py
+   python train.py 
+   ```
+
+   You can specify the model you're going to train by `-m` argument. For example, train `simple_cnn`:
+
+   ```bash
+   python train.py -m simple_cnn
    ```
 
 3. Open browser, navigate to [https://localhost:6006](https://localhost:6006/) to monitor training.
@@ -82,9 +88,9 @@ python test.py -m <trained-model>
 
 ## Inference 
 
-To infer with trained model on desired input images, run 
+To infer with trained model on desired input image, run 
 ```bash
-python infer.py <directory-trained-model> <directory-of-image>
+python infer.py <trained-model> <input-image>
 ```
 
 
