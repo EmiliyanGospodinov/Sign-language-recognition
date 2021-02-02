@@ -30,8 +30,8 @@ def test(model, device, test_dataloader):
             correct_labels += labels.sum().item()
             running_predicted += preds.sum().item()
 
-
     print(f"Accuracy on test set is {correct / len(test_dataloader.dataset) * 100:.4f}%")
+
 
 if __name__ == "__main__":
     arg_parser = get_args_parser()
@@ -40,7 +40,7 @@ if __name__ == "__main__":
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print(f"Running on device: {device}")
 
-    model = torch.load(args.model)
+    model = torch.load(args.model, map_location=device)
     test_dataloader = sign_language_mnist.get_test_loader()
 
     test(model, device, test_dataloader)

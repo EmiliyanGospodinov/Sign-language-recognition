@@ -5,11 +5,10 @@ import torch
 import numpy as np
 
 # imports needed for plotting the activation maps
-import sign_language_mnist
 from PIL import Image
-import torchvision.transforms
-import torchvision
+from torchvision import transforms
 import torchfunc
+import seaborn as sns
 
 
 plt.style.use("ggplot")
@@ -75,7 +74,7 @@ def plot_training(train_val_loss, train_val_acc, save=True):
     ax_acc.legend()
 
     if save:
-        save_fig("loss_acc_plot", "images", fig_extension="png")
+        save_fig(fig, "loss_acc_plot", "images", fig_extension="png")
 
 
 def save_fig(
@@ -212,8 +211,12 @@ def plot_activation_maps(model, img_dir="", layer_num=3):
     recorder.modules(cnn_model)
 
     # load the input image from the corresponding directory
+    # by default an image from the sign language data set will be used
     if img_dir == "":
-        picture = sign_language_mnist.get_test_dataset()[0][0]
+        img_dir = get_config()["test"]["test_set"]["path"]
+        transform = transforms.Compose([transforms.ToTensor()])
+        image = transform(pd.read_csv(img_dir).to_numpy(np.uint8)[:1, 1:])
+
     else:
         try:
             transform = transforms.Compose(
@@ -230,7 +233,7 @@ def plot_activation_maps(model, img_dir="", layer_num=3):
             print("Wrong directory for the input image.")
 
     # push input image through the model
-    output = cnn_model(picture.type(torch.FloatTensor).to(device).reshape(-1, 1, 28, 28))
+    output = cnn_model(image.type(torch.FloatTensor).to(device).reshape(-1, 1, 28, 28))
 
     conv = recorder.data[layer_num][0].cpu().detach().numpy()
     size = recorder.data[layer_num][0].shape[1]
@@ -356,9 +359,9 @@ def f1_score(y_pred, y_true, epsilon=1e-7):
     f1_score: float
         the calculate f1_score value
     """
-    precision = precision(y_pred, y_true, epsilon)
-    recall = recall(y_pred, y_true, epsilon)
+    _precision = precision(y_pred, y_true, epsilon)
+    _recall = recall(y_pred, y_true, epsilon)
 
-    f1 = 2 * (precision * recall) / (precision + recall + epsilon)
+    f1 = 2 * (_precision * _recall) / (_precision + _recall + epsilon)
 
     return f1
